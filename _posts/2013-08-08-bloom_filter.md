@@ -85,7 +85,6 @@ A. BloomFile，BloomFile是一个包含了集合中所有元素映射后结果�
 
 判断一个元素是否在集合中：
 
-```c
 	#define bloomUnitBytes		sizeof(uint32_t)
 	#define bloomHashBytes	 	sizeof(uint64_t)
 	#define halfBloomHashBits	(bloomHashBytes * 4)
@@ -109,4 +108,3 @@ A. BloomFile，BloomFile是一个包含了集合中所有元素映射后结果�
 		}
 		return has;
 	}
-```
