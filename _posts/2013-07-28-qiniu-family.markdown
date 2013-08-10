@@ -1,6 +1,8 @@
 ---
 layout: post
 title: 七牛全家福
+tags:
+   - 七牛
 ---
 
 ## 全家福
