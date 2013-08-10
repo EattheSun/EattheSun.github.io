@@ -43,26 +43,26 @@ title: Bloom Filter 的一种实现
 
 A. BloomFile，BloomFile是一个包含了集合中所有元素映射后结果的一个文件。 BloomFile 结构上分为 BloomFilterHeader 和 BitBody 两部分：
 
-        BloomFile: 
 	+--------------------------------------------------------+
 	|      32bytes         | unit | unit | unit | ... | unit |
 	+--------------------------------------------------------+
 	|                      |                                 |
 	|>  BloomFileHeader   <|>             BitBody           <|
 
-> BloomFileHeader 和通常其他文件格式的头部一样，包含了一些必要的信息。
+- BloomFileHeader 和通常其他文件格式的头部一样，包含了一些必要的信息。
 
-> BitBody 是文件BloomFile中除了头部之外的所有内容。
+- BitBody 是文件BloomFile中除了头部之外的所有内容。
 
-> unit 在这里是 uint32_t 类型的数值，当然也可以是其他的数值类型。用来进行位映射计算的。
+- unit 在这里是 uint32_t 类型的数值，当然也可以是其他的数值类型。用来进行位映射计算的。
 
 
 大体算法如下(TODO)：
 
 1. BloomFilter 程序将 BloomFile 文件读入内存 ( 利用 mmap 进行内存映射 )
 2. 如果要计算一个元素是否存在这个已知的集合中，则：
-> 首先利用某种挑选算法（这里使用的简单的模余运算 % ），将这个元素映射到 BitBody 中的某个 unit 上
-> 然后利用既定的hash函数进行运算，查看该unit中相应的bit位是否为1
+
+- 首先利用某种挑选算法（这里使用的简单的模余运算 % ），将这个元素映射到 BitBody 中的某个 unit 上
+- 然后利用既定的hash函数进行运算，查看该unit中相应的bit位是否为1
 
 结构体定义：
 

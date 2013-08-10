@@ -24,7 +24,9 @@ ol, ul {
   list-style-position: inside; }
 
 li {
-  padding: .2em 0; }
+  padding: .2em 0; 
+  margin-left: 1.5em;
+  }
 
 hr {
   width: 4em;
@@ -68,7 +70,7 @@ header {
   width: 680px;
   margin: 0 auto;
   text-align: justify;
-  margin: 2em auto 4em auto;
+  margin: 2em auto 2em auto;
   border-bottom: 1px dashed #999; }
   header:after {
     content: '';
@@ -119,7 +121,7 @@ ul.listing {
 article {
   margin: 2em 0; }
   article p {
-    padding: .7em 0; }
+    padding: .3em 0; }
   article .title {
     font-family: "Titillium Web", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
     article .title a, article .title header #header h1 a, header #header h1 article .title a, article .title a, article .title .meta .tags a, article .meta .tags .title a {
@@ -128,6 +130,7 @@ article {
     display: block;
     overflow: auto;
     margin-top: -.5em;
+    margin-top: 1.4em;
     font-size: .9em; }
     article .meta .tags a, article .meta .tags header #header h1 a, header #header h1 article .meta .tags a, article .meta .tags .title a, article .title .meta .tags a, article .meta .tags a {
       color: #999999;
@@ -138,6 +141,20 @@ article {
     margin: .5em auto; }
   article .comment {
     margin: 3em 0; }
+
+article .post h1 {
+	font-size: 22px;
+	margin-top: 1em;
+	color:
+}
+article .post h2 {
+	font-size: 19px;
+	margin-top: 0.7em;
+}
+article .post h3 {
+	font-size: 16px;
+	margin-top: 0.5em;
+}
 
 footer {
   width: 680px;
