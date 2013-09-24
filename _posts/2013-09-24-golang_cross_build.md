@@ -2,10 +2,11 @@
 layout: post
 title: golang中的交叉编译
 tags:
-    - golang
-    - cgo
-    - 交叉编译
+   - golang
+   - cgo
+   - 交叉编译
 ___
+
 
 交叉编译是个很常见的需求，其实在 golang 中进行交叉编译是很方便的事情，但是还是有一些注意事项需要说明。
 
