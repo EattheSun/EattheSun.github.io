@@ -17,7 +17,7 @@ tags:
 
 * step2. 在本地回退到有问题的 commit 之前的版本
 
-    $ git reset --hard <commit-id>
+    $ git reset --hard [commit-id]
 
 * step3. 在本地回退到有问题的 commit 之前的版本
 
