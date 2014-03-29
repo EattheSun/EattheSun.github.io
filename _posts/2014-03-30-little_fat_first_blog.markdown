@@ -1,5 +1,5 @@
 ---
-layout :post
+layout: post
 title: 小胖在这里的第一篇文章
 tags:
     - weekend
