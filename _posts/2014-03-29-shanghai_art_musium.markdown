@@ -23,19 +23,19 @@ tags:
 
 电路板城市 如今城市越来越智慧 智能生活的背后就是这些电路板的杰作
 
-  ![electrical-city](http://cindyawu.qiniudn.com/electrical-city.jpg)
+![electrical-city](http://cindyawu.qiniudn.com/electrical-city.jpg)
 
 八把黑伞的舞蹈
 
-  ![umbrella](http://cindyawu.qiniudn.com/umbrella.jpg)
+![umbrella](http://cindyawu.qiniudn.com/umbrella.jpg)
 
 许多个小时钟由于不同的转动方向和律动 从此分钟分开自转 下分钟合成当前的时间 “合久必分 分久必合”
 
-  ![clock](http://cindyawu.qiniudn.com/clock.jpg)
+![clock](http://cindyawu.qiniudn.com/clock.jpg)
   
-  ![clock2](http://cindyawu.qiniudn.com/clock2.jpg)
+![clock2](http://cindyawu.qiniudn.com/clock2.jpg)
    
   
 ## 老公新买的cat
 
-  ![shoes](http://cindyawu.qiniudn.com/shoes.jpg)
+![shoes](http://cindyawu.qiniudn.com/shoes.jpg)
