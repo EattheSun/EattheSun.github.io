@@ -17,7 +17,7 @@ tags:
 
   第二天由于台风，改变了自由行，一早我们去了芭东海滩，换上泳衣，我和老公还有伙伴们就下海冲浪，乌云密布的天空与无垠无际的大海正好形成一张大嘴，温柔又调皮的含着我们，含着这座城市的一切。大海无情，它带走了我的墨镜，雨突然下大，我们泡着浪顶着雨，毫不退缩，煞有人与自然对抗的意味。老公和小团结玩了摩托艇，大胆的老公骑到很远的深海中，不知道他们有没有探索到什么。下午去上山骑大象。大象比我想象中温顺可爱，也许这是从小训象的结果，骑着它还多少有些不忍，它们本该属于大自然。
     ![beach](http://cindyawu.qiniudn.com/beach.jpg)
-      ![elephent](http://cindyawu.qiniudn.com/elphent.jpg)
+      ![elephent](http://cindyawu.qiniudn.com/elephent.jpg)
   
 ## third day
 
