@@ -27,7 +27,7 @@ tags:
 
 * 第二步，在文章里面把下面这一行放在你想要贴图片的地方，过一会你就能在右边看到了：
 
-    ![cindy](http://cindyawu.qiniudn.com/cindy.jpg)
+    ![cindy](http://cindyawu.qiniudn.com/far.jpg)
 
 大功告成啦!!! 
 
