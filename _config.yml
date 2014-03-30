@@ -1,8 +1,4 @@
 markdown: rdiscount
 pygments: true
 permalink: /:title.html
-<<<<<<< HEAD
-name: "Cindy & Nick"
-=======
 name: "There must be an angel with a smile on her face"
->>>>>>> 7ea6a228f012eb04d3f5935f747892a5dd80e91f
