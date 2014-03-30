@@ -27,7 +27,7 @@ hr { width: 4em; border: none; border-top: 1px dashed #d0d0d0; border-bottom: 1p
 .center { text-align: center; }
 ::selection { color: #fff; background-color: #333; }
 .divider { margin: 2em 0; color: #999; &:after { display:block; content: '--- ✄ ---'; text-align: center; } }
-a { text-decoration: none; color: #bb2222; &:hover { color: #dd1144; }; }
+a { text-decoration: none; color: #012F3B; &:hover { color: #dd1144; }; }
 blockquote { background-color: #f8f8f8; padding: 0 1em; border: 1px dashed #eee !important; border-color: #e0e0e0 !important; font-size: 13px; font-family: #{$monospace}; line-height: 1.6; display: block; overflow: auto; }
 pre code { @extend blockquote; }
 
