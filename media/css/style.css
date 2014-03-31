@@ -139,7 +139,7 @@ article {
   article .post img {
     max-width: 600px;
     display: block;
-    margin: .5em auto; }
+    margin: 1em auto; }
   article .comment {
     margin: 3em 0; }
 
