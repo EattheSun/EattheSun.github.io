@@ -123,20 +123,21 @@ article {
   article p {
     padding: .3em 0; }
   article .title {
-    font-family: "Titillium Web", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+    font-family: "Titillium Web", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; 
+    text-align: right; }
     article .title a, article .title header #header h1 a, header #header h1 article .title a, article .title a, article .title .meta .tags a, article .meta .tags .title a {
       color: #777; }
   article .meta {
     display: block;
     overflow: auto;
     margin-top: -.5em;
-    margin-top: 1.4em;
-    font-size: .9em; }
+    font-size: .9em;
+    text-align: right; }
     article .meta .tags a, article .meta .tags header #header h1 a, header #header h1 article .meta .tags a, article .meta .tags .title a, article .title .meta .tags a, article .meta .tags a {
       color: #999999;
       padding: .25em; }
   article .post img {
-    max-width: 680px;
+    max-width: 600px;
     display: block;
     margin: .5em auto; }
   article .comment {
@@ -144,16 +145,16 @@ article {
 
 article .post h1 {
 	font-size: 22px;
-	margin-top: 1em;
+	margin-top: 1.3em;
 	color:
 }
 article .post h2 {
 	font-size: 19px;
-	margin-top: 0.7em;
+	margin-top: 1em;
 }
 article .post h3 {
 	font-size: 16px;
-	margin-top: 0.5em;
+	margin-top: 0.7em;
 }
 
 footer {
