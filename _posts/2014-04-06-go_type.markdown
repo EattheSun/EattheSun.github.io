@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Go 语言的类型探秘(1)
+title: Go 语言的类型探秘（1） —— 类型的基石
 tags:
     - golang
 ---
@@ -24,14 +24,8 @@ go 语言源码最赞的地方就是有大量的注释，很多地方不用自�
 
 type.go 的第一个定义就是对类型 Type 的定义，有种开门见山的感觉:
 
-
-	// Type is the representation of a Go type.
-	//
-	// Not all methods apply to all kinds of types.  Restrictions,
-	// if any, are noted in the documentation for each method.
-	// Use the Kind method to find out the kind of type before
-	// calling kind-specific methods.  Calling a method
-	// inappropriate to the kind of type causes a run-time panic.
+    // ... comments ...
+    //
 	type Type interface {
 		// Methods applicable to all types.
 
@@ -48,6 +42,8 @@ type.go 的第一个定义就是对类型 Type 的定义，有种开门见山的
 
 
 看来，Type 只是一个定义了一组函数的接口，所以我猜测，给 Golang 添加一个类型是很方便的事情，这个后面再说。
+
+需要注意的是，并不是每个类型都会有这组接口函数的实现，如果调用了非该类型有的函数会引发 panic。
 
 再看下 golang 的基础类型到底有哪些，Go 通过这个 Kind 来表示一个类型到底属于哪种基础类型：
 
@@ -87,17 +83,15 @@ type.go 的第一个定义就是对类型 Type 的定义，有种开门见山的
 
 这里面其实分类是比较清晰的：
 
-    * 一类是司空见怪的 整型、复数型、浮点型、布尔型 这些操作系统级类型
-    * 一类是 数组、Slice、String、Map 这类常见的高级一点的类型
+    * 一类是司空见惯的 整型、复数型、浮点型、布尔型 这些C语言级的基础类型
+    * 一类是 数组、Slice、String、Map 这类常见的高级类型
     * 一类是 Go 特有的 Channel 类型和 Interface 类型
     * 一类是指针类型的 Ptr、UnsafePointer
+    
+所有的类型，包括用户自定义的新类型，他们归根结底都是从以上这些基础类型派生出来的。所以它们是万物的祖先。
 
-在看每个基础类型的真身之前，需要先了解一个小东西，叫`rtype`：
+在看每个基础类型的真身之前，需要先了解一个小东西 ———— `rtype`：
 
-    // rtype is the common implementation of most values.
-    // It is embedded in other, public struct types, but always
-    // with a unique tag like `reflect:"array"` or `reflect:"ptr"`
-    // so that code cannot convert from, say, *arrayType to *ptrType.
     type rtype struct {
     	size          uintptr        // size in bytes
     	hash          uint32         // hash of type; avoids computation in hash tables
@@ -113,6 +107,65 @@ type.go 的第一个定义就是对类型 Type 的定义，有种开门见山的
     }
 
 
-实际上 rtype 是所有类型的头信息，这让我想起了 Python 的类型也是相似的实现，所有类型体所占内存的头一块是一个通用的结构体信息，表明了这个类型的基本信息，比如大小，hash值，所属的基本类型等。放在内存头部还有一个作用是为了实现内部的泛型指针，扯远了。
+实际上 rtype 是所有类型的头信息，所有的 Go 类型都会把这个 rtype 结构体放在类型所占内存的头部，这让我想起了 Python 的类型也是相似的实现，所有类型体所占内存的头一块是一个通用的结构体 Header 信息，表明了这个类型的基本信息，比如大小，hash值，所属的基本类型等。在 Python 里，放在内存头部还有一个作用是为了实现动态语言内部的泛型指针，扯远了。
 
+我们分析下这几个字段：
+
+1. `size` 就不用说了，是指名了这个类型所占的内存大小
+2. `hash` 根据注释的意思，即为什么要记在 rtype 里呢，是为了在要用到这个 hash 值时，直接从 rtype 里获取可以减少计算量
+3. `align` 指出这个类型的变量会按照什么大小单位对齐内存
+4. `fieldAlign` 如果这个类型是个 struct，那么其中的每个字段是按多大做内存对齐
+5. `kind` 这个上文有介绍过，就是一个用来标记所属基础类型的常量
+6. `alg` 这个还没有研究过，TODO
+7. `gc` 目测是和垃圾回收的机制有关，TODO
+8. `string` 应该是通过字符串来记录一些这个类型的额外信息
+9. `*uncommonType` 后面会说到，用户的自定义类型会用到这个字段
+10. `ptrTothis` 这个比较有意思，见后述
+
+可能有人会有疑问，如果 rtype 是个 C 结构体我也就认了，但是 rtype 自身其实也是个属于 Go 语言层面的一个自定义类型，而且基础类型是 struct，如果用它来描述别的所有类型，那么谁又来描述 rtype 自己呢？
+
+`ptrToThis` 就是干这个用的，`ptrToThis` 是另一个指向 rtype 类型的指针，它指向的 那个 rtype 其实就是用来描述这个 rtype 的，好吧有点绕，其实就是一句话：
+
+    rtype 也可以描述自己。它是可以自我描述的。
+
+根据注释，`ptrTothis` 的使用场景可能是在涉及到成员函数时会用到。具体目前还不清楚。
+
+另一个比较有意思的是 `*uncommonType` 这个字段。在 Go 的内部实现里面，内置的基本类型称为 `commonType`；如果你定义了一个新的类型，比如：
+
+    type TypeWithName int
+    
+    type TypeWithNameAndMethod int
+    func (t *TypeWithNameAndMethod) Method() {...}
+    
+定义一个类型，肯定会给它一个名字（Name），或者赋予它一些成员函数（Methods），新定义的函数和内置基本函数的不同之处，额，也就是 uncommon 的地方，是它有一个显示的名称，或者是成员函数。所以 uncommonType 的定义实际上比较直观了：
+
+    type uncommonType struct {
+    	name    *string
+    	pkgPath *string
+    	methods []method
+    }
+
+至于为什么 rtype 里组合的是 uncommonType 的指针，当然是为了给 commonType 的类型节省内存空间了。
+
+最后一个陌生的东西就是 method 了：
+
+    type method struct {
+    	name    *string        // name of method
+    	pkgPath *string        // nil for exported Names; otherwise import path
+    	mtyp    *rtype         // method type (without receiver)
+    	typ     *rtype         // .(*FuncType) underneath (with receiver)
+    	ifn     unsafe.Pointer // fn used in interface call (one-word receiver)
+    	tfn     unsafe.Pointer // fn used for normal method call
+    }
+
+关于这个机构提，目前只要知道一个类型的每一个成员函数都会对应着一个这个结构体，具体剖析留到后面对 FuncType 的分析中去吧。
+
+
+## 总结
+
+总得来说，类型系统的基础格局和我对 Python 的了解相似，也难怪Go语言包含了不少动态语言的感觉。
+
+用一张图来总结下类型系统的相关结构：
+
+![go_type_sys](http://cindyawu.qiniudn.com/go_type_sys.png/blog)
 
