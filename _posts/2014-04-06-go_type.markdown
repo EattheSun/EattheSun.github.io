@@ -1,0 +1,118 @@
+---
+layout: post
+title: Go 语言的类型探秘(1)
+tags:
+    - golang
+---
+
+心血来潮，想研究下 golang 底层对类型的实现机制。go 语言底层对类型的操控其实都在 reflect 包中能[找到](http://golang.org/pkg/reflect/)，根据 golang 官方一篇讲解反射机理的[博客](http://golang.org/doc/articles/laws_of_reflection.html)，reflect 的奥秘主要就包含两个东西，一个叫`类型`(Type)，另一个叫`值`(Value)。
+
+其实直接看 reflect 包的代码文件就能发现，reflect 包的实现总共就包含几个主要的 go 文件(其余都是单元测试文件):
+
+	deepequal.go makefunc.go type.go value.go
+
+根据文件名就能猜出个大概，type.go 是类型机制的实现，value.go 是值相关的代码。关于另外两个 deepequal.go 和 makefunc.go，看名字就知道和这次探秘没什么关系，所以咱们以后再剖析。
+
+所以我的理解是，只要搞清楚在 Golang 中类型和值这两个事物是怎么个存在形式，理解 Golang 的其他一些内在机制也就不难了。而且如果有兴趣的话，甚至可以自己动手给 Golang 添加一种基础类型。
+
+
+## 类型 - Type
+
+对类型实现机理的窥探主要依赖于源码文件: [$GOROOT/src/pkg/reflect/type.go](http://golang.org/src/pkg/reflect/type.go)
+
+go 语言源码最赞的地方就是有大量的注释，很多地方不用自己去瞎猜，可以少走不少弯路。
+
+type.go 的第一个定义就是对类型 Type 的定义，有种开门见山的感觉:
+
+
+	// Type is the representation of a Go type.
+	//
+	// Not all methods apply to all kinds of types.  Restrictions,
+	// if any, are noted in the documentation for each method.
+	// Use the Kind method to find out the kind of type before
+	// calling kind-specific methods.  Calling a method
+	// inappropriate to the kind of type causes a run-time panic.
+	type Type interface {
+		// Methods applicable to all types.
+
+		// Align returns the alignment in bytes of a value of
+		// this type when allocated in memory.
+		Align() int
+
+		// FieldAlign returns the alignment in bytes of a value of
+		// this type when used as a field in a struct.
+		FieldAlign() int
+
+		...
+	}
+
+
+看来，Type 只是一个定义了一组函数的接口，所以我猜测，给 Golang 添加一个类型是很方便的事情，这个后面再说。
+
+再看下 golang 的基础类型到底有哪些，Go 通过这个 Kind 来表示一个类型到底属于哪种基础类型：
+
+    // A Kind represents the specific kind of type that a Type represents.
+    // The zero Kind is not a valid kind.
+    type Kind uint
+    
+    const (
+    	Invalid Kind = iota
+    	Bool
+    	Int
+    	Int8
+    	Int16
+    	Int32
+    	Int64
+    	Uint
+    	Uint8
+    	Uint16
+    	Uint32
+    	Uint64
+    	Uintptr
+    	Float32
+    	Float64
+    	Complex64
+    	Complex128
+    	Array
+    	Chan
+    	Func
+    	Interface
+    	Map
+    	Ptr
+    	Slice
+    	String
+    	Struct
+    	UnsafePointer
+    )
+
+这里面其实分类是比较清晰的：
+
+    * 一类是司空见怪的 整型、复数型、浮点型、布尔型 这些操作系统级类型
+    * 一类是 数组、Slice、String、Map 这类常见的高级一点的类型
+    * 一类是 Go 特有的 Channel 类型和 Interface 类型
+    * 一类是指针类型的 Ptr、UnsafePointer
+
+在看每个基础类型的真身之前，需要先了解一个小东西，叫`rtype`：
+
+    // rtype is the common implementation of most values.
+    // It is embedded in other, public struct types, but always
+    // with a unique tag like `reflect:"array"` or `reflect:"ptr"`
+    // so that code cannot convert from, say, *arrayType to *ptrType.
+    type rtype struct {
+    	size          uintptr        // size in bytes
+    	hash          uint32         // hash of type; avoids computation in hash tables
+    	_             uint8          // unused/padding
+    	align         uint8          // alignment of variable with this type
+    	fieldAlign    uint8          // alignment of struct field with this type
+    	kind          uint8          // enumeration for C
+    	alg           *uintptr       // algorithm table (../runtime/runtime.h:/Alg)
+    	gc            unsafe.Pointer // garbage collection data
+    	string        *string        // string form; unnecessary but undeniably useful
+    	*uncommonType                // (relatively) uncommon fields
+    	ptrToThis     *rtype         // type for pointer to this type, if used in binary or has methods
+    }
+
+
+实际上 rtype 是所有类型的头信息，这让我想起了 Python 的类型也是相似的实现，所有类型体所占内存的头一块是一个通用的结构体信息，表明了这个类型的基本信息，比如大小，hash值，所属的基本类型等。放在内存头部还有一个作用是为了实现内部的泛型指针，扯远了。
+
+
